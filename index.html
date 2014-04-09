@@ -2,15 +2,21 @@
 <html lang="pl">
 <head>
 	<meta charset="UTF-8">
-	<title>Gbstrap</title>
+	<title>LeafStrap</title>
 	<link rel="stylesheet" type="text/css" href="./externals/bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="./externals/fontawesome/css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="./externals/leaflet/leaflet.css">
+	<link rel="stylesheet" type="text/css" href="externals/jQueryUI/themes/custom-theme/jquery-ui-1.10.3.custom.css">
 	<link rel="stylesheet" type="text/css" href="./css/style.php">
+	<style type="text/css">
+		#right {
+			padding: 0;
+		}
+	</style>
 </head>
 <body>
 	<div role="navigation" class="navbar navbar-fixed-top navbar-inverse">
-		<div class="container">
+		<div class="container-fluid">
 			<div class="navbar-header">
 				<button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
 					<span class="sr-only">Toggle navigation</span>
@@ -30,9 +36,9 @@
 		</div><!-- /.container -->
 	</div>
 
-	<div id="portal" class="container">
+	<div id="portal" class="container-fluid">
 		<div class="row">
-				<div class="col-md-2" id="left">
+				<div class="col-md-2 sidebar" id="left">
 					<div id="layermanager">
 						
 					</div>
@@ -45,22 +51,26 @@
 		</div>
 	</div>
 	<div class="scripts">
-		<script type="text/javascript" src="./externals/jQuery/jquery-2.1.0.min.js"></script>
+		<script type="text/javascript" src="./externals/jQuery/jquery-2.1.0.js"></script>
 		<script type="text/javascript" src="./externals/jQueryUI/ui/minified/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.js"></script>
 		<script type="text/javascript" src="./externals/leaflet/leaflet-src.js"></script>
-		<script type="text/javascript" src="./externals/proj4js/proj4-compressed.js"></script>
+		<script type="text/javascript" src="./externals/proj4js/proj4-src.js"></script>
+		<!--<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/proj4js/2.1.0/proj4-src.js"></script>-->
+		<script type="text/javascript" src="./externals/proj4js/EPSG2180.js"></script>
 		<script type="text/javascript" src="./externals/proj4leaflet/proj4leaflet.js"></script>
+		<script type="text/javascript" src="./lib/jquery.leafstrap.core.js"></script>
+		<script type="text/javascript" src="./lib/jquery.leafstrap.legend.js"></script>
+		<script type="text/javascript" src="./lib/jquery.Leafstrap.lsLayerManager.js"></script>
 		<script type="text/javascript" src="./js/script.js"></script>
 	</div>
 	<script type="text/javascript">
-	var layers =[];
-	var layer = {
-		type: 'wms',
-		url: "http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi",
-		layers: "nexrad-n0r-900913",
-	};
-	layers.push(layer);
-	var mapa = $('#map').map({layers:layers});
+	var map = $('#map').LeafStrap({center:[1,1]}),
+	data = map.data('LeafStrap')
+	data.layers({type:'osm', layer:'simple'});
+	data.layers({type:'wms', url: 'http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi', layers:'nexrad-n0r-900913'});
+	$('#layermanager').lsLayerManager({map:'#map'});
+
 	</script>
 </body>
 </html>
