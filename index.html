@@ -6,7 +6,8 @@
 	<link rel="stylesheet" type="text/css" href="./externals/bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="./externals/fontawesome/css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="./externals/leaflet/leaflet.css">
-	<link rel="stylesheet" type="text/css" href="externals/jQueryUI/themes/custom-theme/jquery-ui-1.10.3.custom.css">
+	<link rel="stylesheet" type="text/css" href="./externals/leafletprint/dist/leaflet.print.css">
+	<link rel="stylesheet" type="text/css" href="externals/jQueryUI/themes/base/jquery-ui.css">
 	<link rel="stylesheet" type="text/css" href="./css/style.php">
 	<style type="text/css">
 		#right {
@@ -54,21 +55,35 @@
 		<script type="text/javascript" src="./externals/jQuery/jquery-2.1.0.js"></script>
 		<script type="text/javascript" src="./externals/jQueryUI/ui/minified/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.js"></script>
+		<script type="text/javascript" src="./externals/bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="./externals/leaflet/leaflet-src.js"></script>
-		<script type="text/javascript" src="./externals/proj4js/proj4-src.js"></script>
+		<script type="text/javascript" src="./externals/azgs-leaflet/GeoJSON.WFS.js"></style>
+		<script type="text/javascript" src="./externals/leafletprint/dist/leaflet.print.js"></script>
+		<script type="text/javascript" src="./externals/proj4js/proj4-compressed.js"></script>
 		<!--<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/proj4js/2.1.0/proj4-src.js"></script>-->
-		<script type="text/javascript" src="./externals/proj4js/EPSG2180.js"></script>
 		<script type="text/javascript" src="./externals/proj4leaflet/proj4leaflet.js"></script>
+		<script type="text/javascript" src="./externals/proj4leaflet/EPSG2180.js"></script>
 		<script type="text/javascript" src="./lib/jquery.leafstrap.core.js"></script>
 		<script type="text/javascript" src="./lib/jquery.leafstrap.legend.js"></script>
 		<script type="text/javascript" src="./lib/jquery.Leafstrap.lsLayerManager.js"></script>
+		<script type="text/javascript" src="http://vps.mgontar.pl/print/pdf/info.json?var=printConfig"></script>
 		<script type="text/javascript" src="./js/script.js"></script>
 	</div>
 	<script type="text/javascript">
-	var map = $('#map').LeafStrap({center:[1,1]}),
-	data = map.data('LeafStrap')
-	data.layers({type:'osm', layer:'simple'});
-	data.layers({type:'wms', url: 'http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi', layers:'nexrad-n0r-900913'});
+	var LL4326 = [53, 16];
+	var LL2180 = [574717.4906409495, 298754.6158479072];
+	var map = $('#map').LeafStrap({center:[53.21826575946568,15.098304748535154], zoom: 12}),
+	data = map.data('LeafStrap');
+	data.layers({type:'osm', layer:'simple', label: 'OSM'});
+	data.layers({type:'wms', url: 'http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi', layers:'nexrad-n0r-900913', label: 'Nexrad'});
+	//data.layers({type:'wms', url:'http://mapy.geoportal.gov.pl/wss/service/img/guest/Ogolnogeograficzna/MapServer/WMSServer', layers: '0', tileSize: 256})
+	var filter = function(feature, layer) {
+        return feature.properties.id == 1 ;
+    }
+	var req = $.getJSON( "r1.geojson").done(function (){
+    	data.layers({type:'geojson', geojson: req.responseJSON, label: 'test', /*events:{click:function(event){console.log(event)}},*/ filter:filter});
+    });
+
 	$('#layermanager').lsLayerManager({map:'#map'});
 
 	</script>
